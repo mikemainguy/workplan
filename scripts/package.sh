@@ -5,10 +5,11 @@ set -e
 PLATFORM="${1:-mac-arm64}"
 NODE_VERSION="v24.14.1"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+APP_VERSION=$(node -e "console.log(require('./package.json').version)")
 DIST_DIR="$PROJECT_DIR/dist"
-BUNDLE_DIR="$DIST_DIR/workplan-$PLATFORM"
+BUNDLE_DIR="$DIST_DIR/workplan-${APP_VERSION}-${PLATFORM}"
 
-echo "=== Packaging WorkPlan for $PLATFORM ==="
+echo "=== Packaging WorkPlan v${APP_VERSION} for $PLATFORM ==="
 
 # Determine Node.js download URL
 case "$PLATFORM" in
@@ -193,9 +194,9 @@ WINLAUNCHER
 # Step 8: Create zip
 echo "--- Creating zip ---"
 cd "$DIST_DIR"
-ZIP_NAME="workplan-$PLATFORM.zip"
+ZIP_NAME="workplan-${APP_VERSION}-${PLATFORM}.zip"
 rm -f "$ZIP_NAME"
-zip -r -q "$ZIP_NAME" "workplan-$PLATFORM"
+zip -r -q "$ZIP_NAME" "workplan-${APP_VERSION}-${PLATFORM}"
 
 FINAL_SIZE=$(du -sh "$ZIP_NAME" | cut -f1)
 echo ""

@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WorkPlan
 
-## Getting Started
+Personal context engine for managing interactions, people, and projects. Helps you remember what was discussed, what's owed, and what to prepare for across hundreds of daily interactions.
 
-First, run the development server:
+## Development
 
 ```bash
+npm install
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Next.js 16 (App Router, Server Components)
+- SQLite via Prisma + better-sqlite3
+- sqlite-vec for vector search
+- @xenova/transformers for local ML embeddings
+- shadcn/ui + Tailwind CSS
 
-## Learn More
+## Building Portable Distributions
 
-To learn more about Next.js, take a look at the following resources:
+The app can be packaged as a standalone portable bundle that requires zero dependencies on the target machine. No Node.js, no npm, no admin rights needed.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites (build machine only)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node.js v24+
+- npm
 
-## Deploy on Vercel
+### Build a bundle
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Mac (Apple Silicon)
+bash scripts/package.sh mac-arm64
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Mac (Intel)
+bash scripts/package.sh mac-x64
+
+# Windows (64-bit) — can be built from Mac
+bash scripts/package.sh win-x64
+```
+
+Output goes to `dist/workplan-{version}-{platform}.zip`.
+
+### What's in the bundle
+
+- Portable Node.js runtime (~35MB, no install needed)
+- Next.js standalone server + all app code
+- Pre-built native addons (better-sqlite3, sqlite-vec)
+- Empty database with schema applied
+- Launcher scripts
+
+### User instructions
+
+1. Download the zip for your platform
+2. Unzip to any folder
+3. Double-click `Start WorkPlan.command` (Mac) or `Start WorkPlan.bat` (Windows)
+4. Browser opens to http://localhost:3000
+5. To stop: use the Shutdown button in the sidebar, or press Ctrl+C in the terminal
+
+Data is stored in the `data/` folder next to the app. When updating to a new version, unzip the new bundle and copy your `data/` folder into it.
+
+## Releasing a New Version
+
+1. Bump version in `package.json`
+2. Build bundles:
+   ```bash
+   bash scripts/package.sh mac-arm64
+   bash scripts/package.sh win-x64
+   ```
+3. Commit and tag:
+   ```bash
+   git add -A && git commit -m "Release v0.2.0"
+   git push origin main
+   ```
+4. Create GitHub release with bundles attached:
+   ```bash
+   gh release create v0.2.0 \
+     dist/workplan-0.2.0-mac-arm64.zip \
+     dist/workplan-0.2.0-win-x64.zip \
+     --title "WorkPlan v0.2.0" \
+     --notes "Release notes here"
+   ```
+
+The app checks for new releases on startup and shows a banner in the sidebar when an update is available.

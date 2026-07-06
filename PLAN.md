@@ -204,7 +204,12 @@ workplan/
 - [x] Cross-platform builds (Windows from Mac via prebuild-install + npm pack)
 - [x] Test Mac portable bundle (54MB zip, verified working)
 - [x] Test Windows portable bundle (50MB zip, built from Mac, binaries verified)
-- [ ] Document distribution workflow in README or DISTRIBUTION.md
+- [x] Document distribution workflow in README.md
+- [x] Display version number in UI (from package.json, visible in nav)
+- [x] Shutdown button in UI (standalone mode only, with confirmation)
+- [x] Check GitHub releases for newer version, show banner with download link if update available
+- [x] Packaging script reads version from package.json for zip naming (e.g., workplan-0.1.0-mac-arm64.zip)
+- [ ] Version workflow: bump package.json → build → tag + release with matching version
 
 ### Phase 3: Key Views
 - [ ] Daily dashboard
