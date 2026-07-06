@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -46,14 +47,22 @@ export default async function PersonPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">{person.name}</h1>
-        <p className="text-muted-foreground">
-          {[person.title, person.organization].filter(Boolean).join(" @ ")}
-        </p>
-        {person.email && (
-          <p className="text-sm text-muted-foreground">{person.email}</p>
-        )}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{person.name}</h1>
+          <p className="text-muted-foreground">
+            {[person.title, person.organization]
+              .filter(Boolean).join(" @ ")}
+          </p>
+          {person.email && (
+            <p className="text-sm text-muted-foreground">
+              {person.email}
+            </p>
+          )}
+        </div>
+        <Link href={`/people/${person.id}/edit`}>
+          <Button variant="outline">Edit</Button>
+        </Link>
       </div>
 
       {person.notes && (

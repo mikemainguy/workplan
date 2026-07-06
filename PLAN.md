@@ -176,11 +176,11 @@ workplan/
 - [x] Create app layout with navigation
 
 ### Phase 2: Core CRUD
-- [ ] People: create, list, view, edit
-- [ ] Projects: create, list, view, edit
-- [ ] Interactions: create (with paste support), list, view, edit
-- [ ] Action items: create, list, view, edit, status transitions
-- [ ] Link entities (interactions ↔ people, action items ↔ people/projects)
+- [x] People: create, list, view, edit
+- [x] Projects: create, list, view, edit
+- [x] Interactions: create (with paste support), list, view, edit
+- [x] Action items: create, list, view, edit, status transitions
+- [x] Link entities (interactions ↔ people, action items ↔ people/projects)
 
 ### Phase 3: Key Views
 - [ ] Daily dashboard

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -52,18 +53,28 @@ export default async function ProjectPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold">{project.name}</h1>
-          <Badge
-            variant={project.status === "active" ? "default" : "secondary"}
-          >
-            {project.status}
-          </Badge>
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold">{project.name}</h1>
+            <Badge
+              variant={
+                project.status === "active"
+                  ? "default" : "secondary"
+              }
+            >
+              {project.status}
+            </Badge>
+          </div>
+          {project.description && (
+            <p className="text-muted-foreground mt-1">
+              {project.description}
+            </p>
+          )}
         </div>
-        {project.description && (
-          <p className="text-muted-foreground mt-1">{project.description}</p>
-        )}
+        <Link href={`/projects/${project.id}/edit`}>
+          <Button variant="outline">Edit</Button>
+        </Link>
       </div>
 
       {/* People involved */}
