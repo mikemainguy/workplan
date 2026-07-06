@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      String   @default("active") // active, paused, completed, archived
+  metadata    String?  // JSON string for flexible AI-extracted data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  interactions Interaction[]
+  actionItems  ActionItem[]
+}
+
+model Person {
+  id           String   @id @default(cuid())
+  name         String
+  email        String?
+  title        String?  // role/job title
+  organization String?
+  notes        String?
+  metadata     String?  // JSON string for flexible AI-extracted data
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  interactions InteractionPerson[]
+  actionItems  ActionItemPerson[]
+}
+
+model Interaction {
+  id            String   @id @default(cuid())
+  type          String   // meeting, chat, in-person, other
+  subject       String
+  date          DateTime
+  rawContent    String?  // original pasted text — preserved for future AI processing
+  parsedContent String?  // structured/cleaned version
+  metadata      String?  // JSON string for flexible AI-extracted data
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+
+  people      InteractionPerson[]
+  actionItems ActionItem[]
+}
+
+model ActionItem {
+  id          String   @id @default(cuid())
+  description String
+  status      String   @default("open") // open, in-progress, done, cancelled
+  dueDate     DateTime?
+  priority    String?  // low, medium, high, urgent
+  metadata    String?  // JSON string for flexible AI-extracted data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  interactionId String?
+  interaction   Interaction? @relation(fields: [interactionId], references: [id])
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+
+  people ActionItemPerson[]
+}
+
+model InteractionPerson {
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+
+  personId String
+  person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@id([interactionId, personId])
+}
+
+model ActionItemPerson {
+  actionItemId String
+  actionItem   ActionItem @relation(fields: [actionItemId], references: [id], onDelete: Cascade)
+
+  personId String
+  person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@id([actionItemId, personId])
+}
