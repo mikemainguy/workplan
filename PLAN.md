@@ -196,6 +196,16 @@ workplan/
 - [x] Hard delete only for archived items, with confirmation dialog
 - [x] Cascade rules: deleting a person unlinks them (doesn't delete interactions)
 
+### Phase 2.7: Portable Desktop Distribution
+- [x] Configure `next.config.ts` with `output: "standalone"`
+- [x] Create packaging script that bundles portable Node.js + standalone output
+- [x] Build platform-specific launcher scripts (`.bat` for Windows, `.command` for Mac)
+- [x] Handle native addon bundling (better-sqlite3, sqlite-vec) per platform
+- [x] Cross-platform builds (Windows from Mac via prebuild-install + npm pack)
+- [x] Test Mac portable bundle (54MB zip, verified working)
+- [x] Test Windows portable bundle (50MB zip, built from Mac, binaries verified)
+- [ ] Document distribution workflow in README or DISTRIBUTION.md
+
 ### Phase 3: Key Views
 - [ ] Daily dashboard
 - [ ] Person view (aggregated context)
