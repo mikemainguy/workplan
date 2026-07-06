@@ -210,6 +210,13 @@ workplan/
 - [x] Check GitHub releases for newer version, show banner with download link if update available
 - [x] Packaging script reads version from package.json for zip naming (e.g., workplan-0.1.0-mac-arm64.zip)
 - [ ] Version workflow: bump package.json → build → tag + release with matching version
+- [x] Store database in `~/.workplan/` so upgrades find it automatically
+- [x] Run `prisma migrate deploy` on startup (handles fresh install + upgrades)
+- [x] Bundle prisma CLI into packaging script
+- [x] Update launcher scripts to run migrations before server start
+- [x] Replace custom ensureDatabase() with prisma migrate deploy
+- [x] Remove DATABASE_URL from launcher scripts (app resolves it)
+- [x] Update README with new data location
 
 ### Phase 3: Key Views
 - [ ] Daily dashboard

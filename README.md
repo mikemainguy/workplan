@@ -49,7 +49,7 @@ Output goes to `dist/workplan-{version}-{platform}.zip`.
 - Portable Node.js runtime (~35MB, no install needed)
 - Next.js standalone server + all app code
 - Pre-built native addons (better-sqlite3, sqlite-vec)
-- Empty database with schema applied
+- Prisma migration files (database auto-created on first run)
 - Launcher scripts
 
 ### User instructions
@@ -60,7 +60,9 @@ Output goes to `dist/workplan-{version}-{platform}.zip`.
 4. Browser opens to http://localhost:3000
 5. To stop: use the Shutdown button in the sidebar, or press Ctrl+C in the terminal
 
-Data is stored in the `data/` folder next to the app. When updating to a new version, unzip the new bundle and copy your `data/` folder into it.
+Data is stored in `~/.workplan/` (your home directory). This means upgrades are seamless — just unzip the new version and run it. Your data is automatically found.
+
+You can override the data location by setting the `WORKPLAN_DATA_DIR` environment variable.
 
 ## Releasing a New Version
 
@@ -80,8 +82,8 @@ Data is stored in the `data/` folder next to the app. When updating to a new ver
    gh release create v0.2.0 \
      dist/workplan-0.2.0-mac-arm64.zip \
      dist/workplan-0.2.0-win-x64.zip \
-     --title "WorkPlan v0.2.0" \
-     --notes "Release notes here"
+     --title "WorkPlan v0.2.0" 
+     
    ```
 
 The app checks for new releases on startup and shows a banner in the sidebar when an update is available.

@@ -107,13 +107,24 @@ mkdir -p "$BUNDLE_DIR/node_modules/sqlite-vec"
 cp -r node_modules/sqlite-vec/* \
   "$BUNDLE_DIR/node_modules/sqlite-vec/"
 
-# Step 5: Create empty database with schema applied
-echo "--- Creating seed database ---"
-mkdir -p "$BUNDLE_DIR/data"
-SEED_DB="$BUNDLE_DIR/data/workplan.db"
-rm -f "$SEED_DB"
-# Apply migrations using the project's prisma setup
-DATABASE_URL="file:$SEED_DB" npx prisma migrate deploy 2>&1
+# Step 5: Bundle Prisma CLI + migrations for startup
+echo "--- Copying Prisma CLI and migrations ---"
+mkdir -p "$BUNDLE_DIR/prisma"
+cp -r prisma/migrations "$BUNDLE_DIR/prisma/"
+cp prisma/schema.prisma "$BUNDLE_DIR/prisma/"
+cp prisma.config.ts "$BUNDLE_DIR/"
+
+# Copy prisma CLI (needed for migrate deploy)
+mkdir -p "$BUNDLE_DIR/node_modules/prisma"
+cp -r node_modules/prisma/* "$BUNDLE_DIR/node_modules/prisma/"
+mkdir -p "$BUNDLE_DIR/node_modules/.bin"
+
+# Copy dotenv (required by prisma.config.ts)
+if [ -d "node_modules/dotenv" ]; then
+  mkdir -p "$BUNDLE_DIR/node_modules/dotenv"
+  cp -r node_modules/dotenv/* \
+    "$BUNDLE_DIR/node_modules/dotenv/"
+fi
 
 # Step 6: Download portable Node.js
 echo "--- Downloading Node.js $NODE_VERSION for $PLATFORM ---"
@@ -147,12 +158,19 @@ cat > "$BUNDLE_DIR/start.sh" << 'LAUNCHER'
 DIR="$(cd "$(dirname "$0")" && pwd)"
 export NODE_ENV=production
 export PORT="${PORT:-3000}"
-export DATABASE_URL="file:$DIR/data/workplan.db"
+DATA_DIR="${WORKPLAN_DATA_DIR:-$HOME/.workplan}"
+export DATABASE_URL="file:$DATA_DIR/workplan.db"
 
-mkdir -p "$DIR/data"
+mkdir -p "$DATA_DIR"
 
 echo ""
+echo "  Running migrations..."
+"$DIR/runtime/node" \
+  "$DIR/node_modules/prisma/build/index.js" \
+  migrate deploy 2>&1
+echo ""
 echo "  WorkPlan is starting..."
+echo "  Data: $DATA_DIR/"
 echo "  Open http://localhost:$PORT in your browser"
 echo "  Press Ctrl+C to stop"
 echo ""
@@ -177,12 +195,21 @@ cat > "$BUNDLE_DIR/Start WorkPlan.bat" << 'WINLAUNCHER'
 set DIR=%~dp0
 set NODE_ENV=production
 set PORT=3000
-set DATABASE_URL=file:%DIR%data\workplan.db
+if defined WORKPLAN_DATA_DIR (
+  set DATA_DIR=%WORKPLAN_DATA_DIR%
+) else (
+  set DATA_DIR=%USERPROFILE%\.workplan
+)
+set DATABASE_URL=file:%DATA_DIR%\workplan.db
 
-if not exist "%DIR%data" mkdir "%DIR%data"
+if not exist "%DATA_DIR%" mkdir "%DATA_DIR%"
 
 echo.
+echo   Running migrations...
+"%DIR%runtime\node.exe" "%DIR%node_modules\prisma\build\index.js" migrate deploy
+echo.
 echo   WorkPlan is starting...
+echo   Data: %DATA_DIR%\
 echo   Open http://localhost:%PORT% in your browser
 echo   Press Ctrl+C to stop
 echo.
