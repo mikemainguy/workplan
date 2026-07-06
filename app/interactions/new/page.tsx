@@ -32,7 +32,7 @@ export default function NewInteractionPage() {
   const [people, setPeople] = useState<Person[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedPeople, setSelectedPeople] = useState<string[]>([]);
-  const [selectedProject, setSelectedProject] = useState<string>("");
+  const [selectedProject, setSelectedProject] = useState<string>("none");
   const [type, setType] = useState("meeting");
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function NewInteractionPage() {
         subject: formData.get("subject"),
         date: formData.get("date"),
         rawContent: formData.get("rawContent"),
-        projectId: selectedProject || null,
+        projectId: selectedProject === "none" ? null : selectedProject,
         personIds: selectedPeople,
       }),
     });

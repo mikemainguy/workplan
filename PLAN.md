@@ -167,44 +167,44 @@ workplan/
 ## Implementation Phases
 
 ### Phase 1: Scaffold
-- Initialize Next.js with TypeScript, Tailwind, ESLint
-- Install and configure shadcn/ui
-- Set up Prisma with SQLite
-- Set up better-sqlite3 + sqlite-vec for vector tables
-- Set up @xenova/transformers for local embeddings
-- Define schema (all entities above)
-- Create app layout with navigation
+- [x] Initialize Next.js with TypeScript, Tailwind, ESLint
+- [x] Install and configure shadcn/ui
+- [x] Set up Prisma with SQLite
+- [x] Set up better-sqlite3 + sqlite-vec for vector tables
+- [x] Set up @xenova/transformers for local embeddings
+- [x] Define schema (all entities above)
+- [x] Create app layout with navigation
 
 ### Phase 2: Core CRUD
-- People: create, list, view, edit
-- Projects: create, list, view, edit
-- Interactions: create (with paste support), list, view, edit
-- Action items: create, list, view, edit, status transitions
-- Link entities (interactions ↔ people, action items ↔ people/projects)
+- [ ] People: create, list, view, edit
+- [ ] Projects: create, list, view, edit
+- [ ] Interactions: create (with paste support), list, view, edit
+- [ ] Action items: create, list, view, edit, status transitions
+- [ ] Link entities (interactions ↔ people, action items ↔ people/projects)
 
 ### Phase 3: Key Views
-- Daily dashboard
-- Person view (aggregated context)
-- Meeting prep view
-- Project view (aggregated context)
+- [ ] Daily dashboard
+- [ ] Person view (aggregated context)
+- [ ] Meeting prep view
+- [ ] Project view (aggregated context)
 
 ### Phase 4: Search & Polish
-- SQLite FTS5 keyword search
-- sqlite-vec semantic search + auto-embedding on save
-- Unified search UI (keyword + semantic results)
-- Outlook invite parsing
-- UI polish, loading states, empty states
+- [ ] SQLite FTS5 keyword search
+- [ ] sqlite-vec semantic search + auto-embedding on save
+- [ ] Unified search UI (keyword + semantic results)
+- [ ] Outlook invite parsing
+- [ ] UI polish, loading states, empty states
 
 ---
 
 ## Backlog (Future)
 
-- **AI-assisted processing**: Paste notes → auto-extract action items, tag people/projects, generate summaries (Claude API)
-- **Calendar integration**: Direct sync with Outlook/Google Calendar
-- **Teams integration**: Pull chat/meeting context directly
-- **Notifications**: Email reminders for upcoming meetings and overdue action items
-- **Authentication**: Auth.js (NextAuth v5) with magic links via Resend — add when deploying remotely
-- **Vercel deployment**: Move from local to cloud hosting
-- **PostgreSQL migration**: Switch Prisma provider when ready to scale
-- **Offline support / PWA**
-- **Recurring meetings**: Track series and surface context across occurrences
+- [ ] **AI-assisted processing**: Paste notes → auto-extract action items, tag people/projects, generate summaries (Claude API)
+- [ ] **Calendar integration**: Direct sync with Outlook/Google Calendar
+- [ ] **Teams integration**: Pull chat/meeting context directly
+- [ ] **Notifications**: Email reminders for upcoming meetings and overdue action items
+- [ ] **Authentication**: Auth.js (NextAuth v5) with magic links via Resend — add when deploying remotely
+- [ ] **Vercel deployment**: Move from local to cloud hosting
+- [ ] **PostgreSQL migration**: Switch Prisma provider when ready to scale
+- [ ] **Offline support / PWA**
+- [ ] **Recurring meetings**: Track series and surface context across occurrences

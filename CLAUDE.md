@@ -8,4 +8,10 @@
 # General guidance
 - never launch dev server from claude shell, I will always launch dev server myself
 - If we drift into building or exploring features not in PLAN.md, we should stop and adjust the plan before changing anything in the project
-- 
+
+# Plan tracking workflow
+- PLAN.md uses markdown checkboxes (`- [ ]` / `- [x]`) to track progress
+- When a task is completed, mark it `- [x]` in PLAN.md
+- Before starting work, review PLAN.md to identify the next unchecked item
+- Do not skip ahead to later phases while earlier items are unchecked
+- New scope or features must be added to PLAN.md before implementation
