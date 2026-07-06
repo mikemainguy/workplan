@@ -1,9 +1,20 @@
 import { prisma } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { ActionItemCard } from "@/components/action-item-card";
+import { ArchiveToggle } from "@/components/archive-toggle";
 
-export default async function ActionsPage() {
+interface Props {
+  searchParams: Promise<{ archived?: string }>;
+}
+
+export default async function ActionsPage(
+  { searchParams }: Props
+) {
+  const { archived } = await searchParams;
+  const showArchived = archived === "true";
+
   const actionItems = await prisma.actionItem.findMany({
+    where: showArchived ? {} : { archivedAt: null },
     orderBy: [
       { status: "asc" },
       { dueDate: "asc" },
@@ -18,7 +29,10 @@ export default async function ActionsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Action Items</h1>
+      <div className="flex items-center gap-3">
+        <h1 className="text-2xl font-bold">Action Items</h1>
+        <ArchiveToggle />
+      </div>
 
       {actionItems.length === 0 ? (
         <Card>

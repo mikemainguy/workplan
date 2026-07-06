@@ -23,6 +23,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         description: body.description || null,
       }),
       ...(body.status !== undefined && { status: body.status }),
+      ...(body.archivedAt !== undefined && {
+        archivedAt: body.archivedAt ? new Date(body.archivedAt) : null,
+      }),
     },
   });
   return NextResponse.json(project);

@@ -4,11 +4,10 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+  Card, CardContent, CardHeader, CardTitle,
 } from "@/components/ui/card";
+import { ArchiveButton } from "@/components/archive-button";
+import { DeleteButton } from "@/components/delete-button";
 
 export default async function ProjectPage({
   params,
@@ -72,9 +71,20 @@ export default async function ProjectPage({
             </p>
           )}
         </div>
-        <Link href={`/projects/${project.id}/edit`}>
-          <Button variant="outline">Edit</Button>
-        </Link>
+        <div className="flex gap-2">
+          {project.archivedAt && (
+            <DeleteButton entityType="projects"
+              entityId={project.id}
+              entityName={project.name}
+              redirectTo="/projects" />
+          )}
+          <ArchiveButton entityType="projects"
+            entityId={project.id}
+            isArchived={!!project.archivedAt} />
+          <Link href={`/projects/${project.id}/edit`}>
+            <Button variant="outline">Edit</Button>
+          </Link>
+        </div>
       </div>
 
       {/* People involved */}

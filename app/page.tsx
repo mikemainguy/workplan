@@ -11,28 +11,49 @@ export default async function Dashboard() {
   const [todayInteractions, overdueActions, recentInteractions, stats] =
     await Promise.all([
       prisma.interaction.findMany({
-        where: { date: { gte: startOfDay, lt: endOfDay } },
-        include: { people: { include: { person: true } }, project: true },
+        where: {
+          date: { gte: startOfDay, lt: endOfDay },
+          archivedAt: null,
+        },
+        include: {
+          people: { include: { person: true } },
+          project: true,
+        },
         orderBy: { date: "asc" },
       }),
       prisma.actionItem.findMany({
         where: {
           status: { in: ["open", "in-progress"] },
           dueDate: { lt: now },
+          archivedAt: null,
         },
-        include: { people: { include: { person: true } }, project: true },
+        include: {
+          people: { include: { person: true } },
+          project: true,
+        },
         orderBy: { dueDate: "asc" },
       }),
       prisma.interaction.findMany({
+        where: { archivedAt: null },
         take: 5,
         orderBy: { date: "desc" },
-        include: { people: { include: { person: true } }, project: true },
+        include: {
+          people: { include: { person: true } },
+          project: true,
+        },
       }),
       Promise.all([
-        prisma.person.count(),
-        prisma.project.count({ where: { status: "active" } }),
+        prisma.person.count({
+          where: { archivedAt: null },
+        }),
+        prisma.project.count({
+          where: { status: "active", archivedAt: null },
+        }),
         prisma.actionItem.count({
-          where: { status: { in: ["open", "in-progress"] } },
+          where: {
+            status: { in: ["open", "in-progress"] },
+            archivedAt: null,
+          },
         }),
       ]).then(([people, projects, openActions]) => ({
         people,

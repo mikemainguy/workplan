@@ -66,6 +66,10 @@ export async function PATCH(request: NextRequest) {
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
       }),
       ...(body.priority !== undefined && { priority: body.priority }),
+      ...(body.archivedAt !== undefined && {
+        archivedAt: body.archivedAt
+          ? new Date(body.archivedAt) : null,
+      }),
     },
   });
 

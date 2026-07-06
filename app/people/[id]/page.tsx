@@ -4,11 +4,10 @@ import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+  Card, CardContent, CardHeader, CardTitle,
 } from "@/components/ui/card";
+import { ArchiveButton } from "@/components/archive-button";
+import { DeleteButton } from "@/components/delete-button";
 
 export default async function PersonPage({
   params,
@@ -60,9 +59,20 @@ export default async function PersonPage({
             </p>
           )}
         </div>
-        <Link href={`/people/${person.id}/edit`}>
-          <Button variant="outline">Edit</Button>
-        </Link>
+        <div className="flex gap-2">
+          {person.archivedAt && (
+            <DeleteButton entityType="people"
+              entityId={person.id}
+              entityName={person.name}
+              redirectTo="/people" />
+          )}
+          <ArchiveButton entityType="people"
+            entityId={person.id}
+            isArchived={!!person.archivedAt} />
+          <Link href={`/people/${person.id}/edit`}>
+            <Button variant="outline">Edit</Button>
+          </Link>
+        </div>
       </div>
 
       {person.notes && (

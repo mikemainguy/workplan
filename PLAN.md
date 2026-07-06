@@ -29,10 +29,14 @@ Managing hundreds of daily interactions across dozens of projects leads to lost 
 
 ```
 Project
-  - id, name, description, status, metadata (JSON), created_at, updated_at
+  - id, name, description, status, metadata (JSON)
+  - archived_at (nullable — null means active)
+  - created_at, updated_at
 
 Person
-  - id, name, email, role/title, organization, notes, metadata (JSON), created_at, updated_at
+  - id, name, email, role/title, organization, notes, metadata (JSON)
+  - archived_at (nullable — null means active)
+  - created_at, updated_at
 
 Interaction
   - id, type (meeting | chat | in-person | other)
@@ -41,6 +45,7 @@ Interaction
   - parsed_content (structured/cleaned version)
   - metadata (JSON — flexible field for future AI-extracted data)
   - project_id (optional FK)
+  - archived_at (nullable — null means active)
   - created_at, updated_at
 
 ActionItem
@@ -50,6 +55,7 @@ ActionItem
   - interaction_id (FK — where it originated)
   - project_id (optional FK)
   - metadata (JSON)
+  - archived_at (nullable — null means active)
   - created_at, updated_at
 
 InteractionPerson (join table)
@@ -181,6 +187,14 @@ workplan/
 - [x] Interactions: create (with paste support), list, view, edit
 - [x] Action items: create, list, view, edit, status transitions
 - [x] Link entities (interactions ↔ people, action items ↔ people/projects)
+
+### Phase 2.5: Archive & Delete
+- [x] Add `archivedAt` (nullable DateTime) to all entities in Prisma schema
+- [x] Archive/unarchive buttons on detail pages
+- [x] Filter archived items out of default list views
+- [x] "Show archived" toggle on list pages
+- [x] Hard delete only for archived items, with confirmation dialog
+- [x] Cascade rules: deleting a person unlinks them (doesn't delete interactions)
 
 ### Phase 3: Key Views
 - [ ] Daily dashboard

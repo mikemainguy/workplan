@@ -25,6 +25,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         organization: body.organization || null,
       }),
       ...(body.notes !== undefined && { notes: body.notes || null }),
+      ...(body.archivedAt !== undefined && {
+        archivedAt: body.archivedAt ? new Date(body.archivedAt) : null,
+      }),
     },
   });
   return NextResponse.json(person);

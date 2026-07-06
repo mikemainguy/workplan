@@ -12,6 +12,8 @@ import {
 import {
   ManageParticipants,
 } from "@/components/manage-participants";
+import { ArchiveButton } from "@/components/archive-button";
+import { DeleteButton } from "@/components/delete-button";
 
 export default async function InteractionPage({
   params,
@@ -55,9 +57,20 @@ export default async function InteractionPage({
             })}
           </p>
         </div>
-        <Link href={`/interactions/${interaction.id}/edit`}>
-          <Button variant="outline">Edit</Button>
-        </Link>
+        <div className="flex gap-2">
+          {interaction.archivedAt && (
+            <DeleteButton entityType="interactions"
+              entityId={interaction.id}
+              entityName={interaction.subject}
+              redirectTo="/interactions" />
+          )}
+          <ArchiveButton entityType="interactions"
+            entityId={interaction.id}
+            isArchived={!!interaction.archivedAt} />
+          <Link href={`/interactions/${interaction.id}/edit`}>
+            <Button variant="outline">Edit</Button>
+          </Link>
+        </div>
       </div>
 
       <Card>
