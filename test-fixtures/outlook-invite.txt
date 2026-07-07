@@ -1,0 +1,25 @@
+Subject: Project Alpha Weekly Sync
+Date: Wednesday, February 5, 2025 2:00 PM - 2:30 PM (UTC-05:00) Eastern Time
+Location: Microsoft Teams Meeting
+
+Required Attendees: Smith, Jane; Johnson, Bob; Mainguy, Michael; Williams, Sarah
+Optional Attendees: Garcia, Maria
+
+Agenda:
+1. Sprint review - what shipped last week
+2. Blockers and dependencies
+3. Planning for next sprint
+4. Action items review
+
+Please come prepared with your status updates.
+
+________________________________________________________________________________
+Microsoft Teams meeting
+Join: https://teams.microsoft.com/meet/98722232132123?p=AbCdEfGh
+Meeting ID: 987 222 321 321 23
+Passcode: abc123
+Dial in by phone
++1 872-555-1212,,123456789# United States, Chicago
+Phone conference ID: 123 456 789#
+For organizers: Meeting options | Reset dial-in PIN
+________________________________________________________________________________

@@ -1,0 +1,14 @@
+Met with Jane and Bob about the data pipeline issues.
+
+Key points:
+- The ETL job is failing on large datasets (>10GB)
+- Bob thinks it's a memory issue on the worker nodes
+- Jane is going to check the CloudWatch logs
+
+Action items:
+- Jane to pull CloudWatch logs by Thursday
+- Bob to test with smaller batch sizes
+- Michael to update the ticket with findings
+- TODO: Schedule follow-up for next Monday
+
+Decision: We'll hold off on the schema migration until the pipeline is stable.

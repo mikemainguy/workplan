@@ -218,7 +218,32 @@ workplan/
 - [x] Remove DATABASE_URL from launcher scripts (app resolves it)
 - [x] Update README with new data location
 
-### Phase 3: Key Views
+### Phase 3: Data Collection Enhancements
+
+#### 3a: Smart Paste — Content Type Detection
+- [x] Auto-detect pasted content type (Outlook invite, Teams meeting block, Teams chat, free-form notes)
+- [x] Strip boilerplate (Teams join links, phone numbers, privacy notices, VTC info)
+- [x] Store cleaned content as `parsedContent`, raw paste as `rawContent`
+
+#### 3b: Outlook Invite Parsing
+- [x] Extract subject line
+- [x] Extract date/time and pre-fill form
+- [x] Extract attendee list (names and/or emails)
+- [x] Match attendees to existing People or offer to create new ones
+- [x] Handle mixed format: invite body + embedded Teams meeting block
+
+#### 3c: Teams Chat Parsing
+- [x] Parse Teams chat copy format (preview line, sender, timestamp, message)
+- [x] De-duplicate preview lines from full message text
+- [x] Extract unique participants and link to People
+- [x] Extract date/time range from timestamps
+
+#### 3d: Action Item Extraction
+- [x] Detect action item patterns: "Action:", "TODO:", "[ ]", "- [ ]", "@name to do X"
+- [ ] Auto-create ActionItems linked to the interaction
+- [ ] Link extracted action items to detected People when possible
+
+### Phase 4: Key Views (moved from Phase 3)
 - [ ] Daily dashboard
 - [ ] Person view (aggregated context)
 - [ ] Meeting prep view
