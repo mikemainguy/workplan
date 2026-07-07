@@ -209,7 +209,7 @@ workplan/
 - [x] Shutdown button in UI (standalone mode only, with confirmation)
 - [x] Check GitHub releases for newer version, show banner with download link if update available
 - [x] Packaging script reads version from package.json for zip naming (e.g., workplan-0.1.0-mac-arm64.zip)
-- [ ] Version workflow: bump package.json → build → tag + release with matching version
+- [x] Version workflow: `bash scripts/release.sh <version>` handles everything
 - [x] Store database in `~/.workplan/` so upgrades find it automatically
 - [x] Run `prisma migrate deploy` on startup (handles fresh install + upgrades)
 - [x] Bundle prisma CLI into packaging script

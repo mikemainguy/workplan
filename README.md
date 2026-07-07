@@ -66,24 +66,16 @@ You can override the data location by setting the `WORKPLAN_DATA_DIR` environmen
 
 ## Releasing a New Version
 
-1. Bump version in `package.json`
-2. Build bundles:
-   ```bash
-   bash scripts/package.sh mac-arm64
-   bash scripts/package.sh win-x64
-   ```
-3. Commit and tag:
-   ```bash
-   git add -A && git commit -m "Release v0.2.0"
-   git push origin main
-   ```
-4. Create GitHub release with bundles attached:
-   ```bash
-   gh release create v0.2.0 \
-     dist/workplan-0.2.0-mac-arm64.zip \
-     dist/workplan-0.2.0-win-x64.zip \
-     --title "WorkPlan v0.2.0" 
-     
-   ```
+Single command handles everything:
+
+```bash
+bash scripts/release.sh 0.3.0
+```
+
+This will:
+1. Update version in `package.json`
+2. Build Mac ARM64 and Windows x64 bundles
+3. Commit, tag, and push to origin
+4. Create GitHub release with both zips attached
 
 The app checks for new releases on startup and shows a banner in the sidebar when an update is available.
