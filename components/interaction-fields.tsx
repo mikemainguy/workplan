@@ -1,6 +1,5 @@
 "use client";
 
-import { RefObject } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -19,14 +18,16 @@ interface Props {
   project: string;
   setProject: (v: string) => void;
   projects: Project[];
-  subjectRef: RefObject<HTMLInputElement | null>;
-  dateRef: RefObject<HTMLInputElement | null>;
+  subject: string;
+  setSubject: (v: string) => void;
+  date: string;
+  setDate: (v: string) => void;
 }
 
 export function InteractionFields(props: Props) {
   const { type, setType, project, setProject,
-    projects, subjectRef, dateRef } = props;
-  const now = new Date().toISOString().slice(0, 16);
+    projects, subject, setSubject, date, setDate,
+  } = props;
 
   return (
     <Card>
@@ -52,13 +53,15 @@ export function InteractionFields(props: Props) {
             <Label htmlFor="date">Date & Time *</Label>
             <Input id="date" name="date"
               type="datetime-local" required
-              defaultValue={now} ref={dateRef} />
+              value={date}
+              onChange={(e) => setDate(e.target.value)} />
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="subject">Subject *</Label>
           <Input id="subject" name="subject" required
-            ref={subjectRef}
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
             placeholder="Meeting topic or subject" />
         </div>
         <div className="space-y-2">

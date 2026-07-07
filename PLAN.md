@@ -243,6 +243,13 @@ workplan/
 - [ ] Auto-create ActionItems linked to the interaction
 - [ ] Link extracted action items to detected People when possible
 
+### Phase 3.5: LLM-Powered Parsing (Local Inference Only)
+- [ ] Migrate `@xenova/transformers` v2 → `@huggingface/transformers` v4
+- [ ] Ollama integration: detect availability, extract with NuExtract/Llama 3.2
+- [ ] Browser-side transformers.js: NuExtract-1.5-tiny with WebGPU backend
+- [ ] Tiered parse flow: Ollama → transformers.js WebGPU → regex fallback
+- [ ] UI indicator showing which extraction method was used
+
 ### Phase 4: Key Views (moved from Phase 3)
 - [ ] Daily dashboard
 - [ ] Person view (aggregated context)

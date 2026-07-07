@@ -1,18 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select, SelectContent, SelectItem,
-  SelectTrigger, SelectValue,
-} from "@/components/ui/select";
 import {
   Card, CardContent, CardHeader, CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { PasteParser } from "./paste-parser";
 import { InteractionFields } from "./interaction-fields";
 import { ParticipantPicker } from "./participant-picker";
@@ -29,8 +22,9 @@ export function InteractionForm() {
   const [project, setProject] = useState("none");
   const [type, setType] = useState("meeting");
   const [rawContent, setRawContent] = useState("");
-  const subjectRef = useRef<HTMLInputElement>(null);
-  const dateRef = useRef<HTMLInputElement>(null);
+  const [subject, setSubject] = useState("");
+  const now = new Date().toISOString().slice(0, 16);
+  const [date, setDate] = useState(now);
 
   useEffect(() => {
     Promise.all([
@@ -49,13 +43,8 @@ export function InteractionForm() {
     },
     raw: string
   ) {
-    if (result.subject && subjectRef.current) {
-      subjectRef.current.value = result.subject;
-    }
-    if (result.date && dateRef.current) {
-      dateRef.current.value =
-        result.date.slice(0, 16);
-    }
+    if (result.subject) setSubject(result.subject);
+    if (result.date) setDate(result.date.slice(0, 16));
     setType(result.interactionType);
     setRawContent(raw);
     const ids = result.matchedPeople
@@ -69,15 +58,14 @@ export function InteractionForm() {
   ) {
     e.preventDefault();
     setSaving(true);
-    const fd = new FormData(e.currentTarget);
     const res = await fetch("/api/interactions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         type,
-        subject: fd.get("subject"),
-        date: fd.get("date"),
-        rawContent: rawContent || fd.get("rawContent"),
+        subject,
+        date,
+        rawContent,
         projectId: project === "none" ? null : project,
         personIds: selected,
       }),
@@ -104,7 +92,8 @@ export function InteractionForm() {
         type={type} setType={setType}
         project={project} setProject={setProject}
         projects={projects}
-        subjectRef={subjectRef} dateRef={dateRef} />
+        subject={subject} setSubject={setSubject}
+        date={date} setDate={setDate} />
       <ParticipantPicker
         people={people} selected={selected}
         onToggle={(id) => setSelected((prev) =>

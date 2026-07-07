@@ -52,8 +52,20 @@ export function parseContent(rawText: string): ParseResult {
 
   if (contentType === "teams-chat") {
     const parsed = parseTeamsChat(rawText);
+    // Use first message timestamp as the date
+    // Format is "2/4 9:30 AM" — no year, assume current
+    const firstTs = parsed.dateRange?.first;
+    let chatDate: string | undefined;
+    if (firstTs) {
+      const year = new Date().getFullYear();
+      const d = new Date(`${firstTs} ${year}`);
+      if (!isNaN(d.getTime())) {
+        chatDate = d.toISOString();
+      }
+    }
     return {
       contentType,
+      date: chatDate,
       interactionType: "chat",
       attendees: parsed.participants.map(normalizeAttendeeName),
       cleanedContent: parsed.messages
