@@ -151,7 +151,7 @@ else
   cp "$CACHE_DIR/$NODE_DIR/bin/node" "$BUNDLE_DIR/runtime/"
 fi
 
-# Step 7: Create launcher scripts
+# Step 8: Create launcher scripts
 echo "--- Creating launchers ---"
 cat > "$BUNDLE_DIR/start.sh" << 'LAUNCHER'
 #!/bin/bash
@@ -218,7 +218,7 @@ start http://localhost:%PORT%
 "%DIR%runtime\node.exe" "%DIR%server.js"
 WINLAUNCHER
 
-# Step 8: Create zip
+# Step 9: Create zip
 echo "--- Creating zip ---"
 cd "$DIST_DIR"
 ZIP_NAME="workplan-${APP_VERSION}-${PLATFORM}.zip"

@@ -51,3 +51,6 @@ next-env.d.ts
 
 # distribution bundles
 /dist/
+
+# ONNX model files (too large for git)
+/public/models/

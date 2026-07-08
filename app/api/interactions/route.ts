@@ -38,5 +38,12 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  // Queue AI analysis if there's content to analyze
+  if (body.rawContent) {
+    await prisma.aiJob.create({
+      data: { interactionId: interaction.id },
+    });
+  }
+
   return NextResponse.json(interaction, { status: 201 });
 }

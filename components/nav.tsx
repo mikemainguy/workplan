@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { icons } from "./nav-icons";
 import { ShutdownButton } from "./shutdown-button";
 import { UpdateBanner } from "./update-banner";
+import { AiBadge } from "./ai-badge";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: "LayoutDashboard" },
@@ -47,6 +48,9 @@ export function Nav() {
               )}>
               {icons[item.icon]}
               {item.label}
+              {item.href === "/interactions" && (
+                <AiBadge />
+              )}
             </Link>
           );
         })}

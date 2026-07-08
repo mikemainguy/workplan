@@ -1,4 +1,4 @@
-import { pipeline, type FeatureExtractionPipeline } from "@xenova/transformers";
+import { pipeline, type FeatureExtractionPipeline } from "@huggingface/transformers";
 
 const MODEL_NAME = "Xenova/all-MiniLM-L6-v2";
 
@@ -11,7 +11,7 @@ function getEmbeddingPipeline(): Promise<FeatureExtractionPipeline> {
     globalForEmbedder.embeddingPipeline = pipeline(
       "feature-extraction",
       MODEL_NAME,
-      { quantized: false }
+      { dtype: "fp32" }
     );
   }
   return globalForEmbedder.embeddingPipeline;

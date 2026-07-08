@@ -19,6 +19,7 @@ interface ParseResult {
   cleanedContent: string;
   actionItems: string[];
   matchedPeople: MatchedPerson[];
+  method?: string;
 }
 
 interface Props {
@@ -28,9 +29,8 @@ interface Props {
 export function PasteParser({ onParsed }: Props) {
   const [text, setText] = useState("");
   const [parsing, setParsing] = useState(false);
-  const [result, setResult] = useState<ParseResult | null>(
-    null
-  );
+  const [result, setResult] =
+    useState<ParseResult | null>(null);
 
   async function handleParse() {
     if (!text.trim()) return;
@@ -52,15 +52,24 @@ export function PasteParser({ onParsed }: Props) {
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste meeting invite, Teams chat,
           or notes here..." />
-      <div className="flex items-center gap-3">
-        <Button onClick={handleParse} disabled={parsing}
-          size="sm">
+      <div className="flex items-center gap-3 flex-wrap">
+        <Button onClick={handleParse}
+          disabled={parsing} size="sm">
           {parsing ? "Parsing..." : "Parse & Fill"}
         </Button>
         {result && (
-          <Badge variant="secondary">
-            Detected: {result.contentType}
-          </Badge>
+          <>
+            <Badge variant="secondary">
+              {result.contentType}
+            </Badge>
+            <Badge variant="outline">
+              via {result.method ?? "regex"}
+            </Badge>
+            <span className="text-xs
+              text-muted-foreground">
+              AI analysis will run in background
+            </span>
+          </>
         )}
       </div>
     </div>

@@ -14,6 +14,7 @@ import {
 } from "@/components/manage-participants";
 import { ArchiveButton } from "@/components/archive-button";
 import { DeleteButton } from "@/components/delete-button";
+import { AiSuggestions } from "@/components/ai-suggestions";
 
 export default async function InteractionPage({
   params,
@@ -97,6 +98,11 @@ export default async function InteractionPage({
           </CardContent>
         </Card>
       )}
+
+      <AiSuggestions
+        interactionId={interaction.id}
+        projectId={interaction.project?.id}
+      />
 
       <InteractionActions
         interactionId={interaction.id}

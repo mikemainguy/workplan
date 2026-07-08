@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { Nav } from "@/components/nav";
+import { AiQueue } from "@/components/ai-queue";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
         <Toaster />
+        <AiQueue />
       </body>
     </html>
   );

@@ -244,11 +244,20 @@ workplan/
 - [ ] Link extracted action items to detected People when possible
 
 ### Phase 3.5: LLM-Powered Parsing (Local Inference Only)
-- [ ] Migrate `@xenova/transformers` v2 → `@huggingface/transformers` v4
-- [ ] Ollama integration: detect availability, extract with NuExtract/Llama 3.2
-- [ ] Browser-side transformers.js: NuExtract-1.5-tiny with WebGPU backend
-- [ ] Tiered parse flow: Ollama → transformers.js WebGPU → regex fallback
-- [ ] UI indicator showing which extraction method was used
+- [x] Migrate `@xenova/transformers` v2 → `@huggingface/transformers` v4
+- [x] Ollama integration: detect availability, extract with structured JSON output
+- [x] ~~Browser-side transformers.js~~ (removed — too slow on WASM, Ollama is 100x faster)
+- [x] Tiered parse flow: Ollama → regex fallback
+- [x] UI indicator showing which extraction method was used (badge: "via ollama" / "via regex")
+
+### Phase 3.7: Background AI Processing with Review Queue
+- [x] Add AiJob model to Prisma schema (status, result, interactionId)
+- [x] Create AiJob on interaction save (when rawContent present)
+- [x] Multi-pass LLM prompts (summarize → attendees → action items)
+- [x] Server-side Ollama queue (AiQueue polls, server processes via Ollama)
+- [x] Nav badge showing unreviewed AI analyses count (polls every 10s)
+- [x] AI suggestions card on interaction detail page
+- [x] Accept/dismiss suggestions (link people, create action items)
 
 ### Phase 4: Key Views (moved from Phase 3)
 - [ ] Daily dashboard
