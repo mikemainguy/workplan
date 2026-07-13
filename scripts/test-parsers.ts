@@ -4,7 +4,9 @@ import { parseContent } from "../lib/parsers/index";
 
 const fixtures = [
   "teams-meeting-block.txt",
-  "teams-chat.txt",
+  "chat-iso-log.txt",
+  "chat-teams-desktop.txt",
+  "chat-whatsapp.txt",
   "outlook-invite.txt",
   "freeform-notes.txt",
 ];

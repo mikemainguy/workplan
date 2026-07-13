@@ -19,21 +19,30 @@ const OUTLOOK_INVITE_MARKERS = [
   /^Location:\s/m,
 ];
 
-// Teams chat: "LastName, FirstName\n<date> <time>\n"
-const TEAMS_CHAT_PATTERN =
-  /^[A-Z][a-z]+,\s[A-Z][a-z]+\n\d{1,2}\/\d{1,2}\s\d{1,2}:\d{2}\s[AP]M$/m;
+// Multiple chat format detection patterns
+const CHAT_PATTERNS: RegExp[] = [
+  // Teams Desktop: "LastName, FirstName\ndate time"
+  /^[A-Z][a-z]+,\s[A-Z][a-z]+\n\d{1,2}\/\d{1,2}\s\d{1,2}:\d{2}\s[AP]M$/m,
+  // ISO log: [2026-09-14T13:22:04Z] Name: message
+  /^\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z?\]\s+\w+.*:\s/m,
+  // WhatsApp: 1/15/26, 9:41 AM - Name: message
+  /^\d{1,2}\/\d{1,2}\/\d{2,4},?\s\d{1,2}:\d{2}\s[AP]M\s[–-]\s.+:/m,
+];
 
-export function detectContentType(text: string): ContentType {
-  // Check for Outlook invite first (may contain Teams block)
-  const inviteScore = OUTLOOK_INVITE_MARKERS.filter((m) =>
-    m instanceof RegExp ? m.test(text) : text.includes(m)
+export function detectContentType(
+  text: string
+): ContentType {
+  const inviteScore = OUTLOOK_INVITE_MARKERS.filter(
+    (m) =>
+      m instanceof RegExp
+        ? m.test(text) : text.includes(m)
   ).length;
   if (inviteScore >= 2) return "outlook-invite";
 
-  // Check for Teams chat format
-  if (TEAMS_CHAT_PATTERN.test(text)) return "teams-chat";
+  if (CHAT_PATTERNS.some((p) => p.test(text))) {
+    return "teams-chat";
+  }
 
-  // Check for standalone Teams meeting block
   const teamsScore = TEAMS_MEETING_MARKERS.filter(
     (m) => text.includes(m)
   ).length;

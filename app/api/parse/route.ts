@@ -4,26 +4,23 @@ import { prisma } from "@/lib/db";
 import {
   isOllamaAvailable, extractWithOllama,
 } from "@/lib/parsers/llm-ollama";
+import { findBestMatch } from "@/lib/fuzzy-match";
 
-async function matchPeople(attendees: string[]) {
+async function matchPeople(attendees: unknown[]) {
+  const allPeople = await prisma.person.findMany({
+    where: { archivedAt: null },
+    select: { id: true, name: true },
+  });
   const matched = [];
-  for (const name of attendees) {
-    const [first, ...rest] = name.split(" ");
-    const lastName = rest.join(" ");
-    const person = await prisma.person.findFirst({
-      where: {
-        OR: [
-          { name: { contains: name } },
-          { name: { contains: `${lastName}, ${first}` } },
-          { name: { contains: lastName } },
-        ],
-        archivedAt: null,
-      },
-    });
+  for (const raw of attendees) {
+    if (!raw || typeof raw !== "string") continue;
+    const name = raw.trim();
+    if (!name) continue;
+    const result = findBestMatch(name, allPeople);
     matched.push({
       name,
-      personId: person?.id ?? null,
-      personName: person?.name ?? null,
+      personId: result.personId,
+      personName: result.personName,
     });
   }
   return matched;

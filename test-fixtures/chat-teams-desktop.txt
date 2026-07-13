@@ -1,0 +1,49 @@
+Good morning everyone. by Reed, Morgan
+Reed, Morgan
+9/14 1:22 PM
+Good morning everyone.
+has context menu
+Do we have confirmation that the dataset is final? by Reed, Morgan
+Reed, Morgan
+9/14 1:24 PM
+Do we have confirmation that the simulation dataset is final? I heard there may still be adjustments being made.
+has context menu
+Not final yet. The Operations team found inconsistencies. by Chen, Avery
+Chen, Avery
+9/14 1:31 PM
+Not final yet. The Operations team found several classification inconsistencies and they're correcting them now.
+has context menu
+Is this going to impact our milestone next week? by Park, Jamie
+Park, Jamie
+9/14 1:35 PM
+Is this going to impact our milestone next week?
+has context menu
+Potentially. Depends on how extensive the rework is. by Chen, Avery
+Chen, Avery
+9/14 1:36 PM
+Potentially. Depends on how extensive the rework ends up being.
+has context menu
+We should identify which deliverables can continue. by Brooks, Riley
+Brooks, Riley
+9/14 1:41 PM
+We should probably identify which deliverables can continue independently versus which ones are blocked by the dataset.
+has context menu
+Agreed. I'd rather not stop everything. by Reed, Morgan
+Reed, Morgan
+9/14 1:43 PM
+Agreed. I'd rather not stop progress on everything because of one dependency.
+has context menu
+The orchestration component can continue. by Kim, Jordan
+Kim, Jordan
+9/14 1:45 PM
+The orchestration component can continue. The enrichment logic may need to wait.
+has context menu
+Can we get a working session this week? by Park, Jamie
+Park, Jamie
+9/14 2:14 PM
+Can we get a working session this week? I still think there are open questions around how the enrichment process is supposed to behave long term.
+has context menu
+Happy to schedule something. by Reed, Morgan
+Reed, Morgan
+9/14 2:15 PM
+Happy to schedule something.

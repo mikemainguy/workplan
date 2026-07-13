@@ -13,12 +13,18 @@ import { ParticipantPicker } from "./participant-picker";
 interface Person { id: string; name: string; }
 interface Project { id: string; name: string; }
 
+interface MatchedPerson {
+  name: string;
+  personId: string | null;
+}
+
 export function InteractionForm() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [unmatched, setUnmatched] = useState<string[]>([]);
   const [project, setProject] = useState("none");
   const [type, setType] = useState("meeting");
   const [rawContent, setRawContent] = useState("");
@@ -38,8 +44,10 @@ export function InteractionForm() {
   function onParsed(
     result: {
       subject?: string; date?: string;
-      interactionType: string; cleanedContent: string;
-      matchedPeople: { personId: string | null }[];
+      interactionType: string;
+      cleanedContent: string;
+      matchedPeople: MatchedPerson[];
+      attendees?: string[];
     },
     raw: string
   ) {
@@ -47,10 +55,30 @@ export function InteractionForm() {
     if (result.date) setDate(result.date.slice(0, 16));
     setType(result.interactionType);
     setRawContent(raw);
-    const ids = result.matchedPeople
-      .map((p) => p.personId)
-      .filter((id): id is string => id !== null);
-    if (ids.length) setSelected(ids);
+
+    const matched = result.matchedPeople
+      .filter((p) => p.personId)
+      .map((p) => p.personId as string);
+    if (matched.length) setSelected(matched);
+
+    const unmatchedNames = result.matchedPeople
+      .filter((p) => !p.personId)
+      .map((p) => p.name);
+    setUnmatched(unmatchedNames);
+  }
+
+  async function handleCreatePerson(name: string) {
+    const res = await fetch("/api/people", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    const person = await res.json();
+    setPeople((prev) => [...prev, person]);
+    setSelected((prev) => [...prev, person.id]);
+    setUnmatched((prev) =>
+      prev.filter((n) => n !== name)
+    );
   }
 
   async function handleSubmit(
@@ -62,10 +90,7 @@ export function InteractionForm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        type,
-        subject,
-        date,
-        rawContent,
+        type, subject, date, rawContent,
         projectId: project === "none" ? null : project,
         personIds: selected,
       }),
@@ -82,7 +107,7 @@ export function InteractionForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Paste Content</CardTitle>
+          <CardTitle>Paste or Upload Content</CardTitle>
         </CardHeader>
         <CardContent>
           <PasteParser onParsed={onParsed} />
@@ -96,6 +121,8 @@ export function InteractionForm() {
         date={date} setDate={setDate} />
       <ParticipantPicker
         people={people} selected={selected}
+        unmatchedNames={unmatched}
+        onCreatePerson={handleCreatePerson}
         onToggle={(id) => setSelected((prev) =>
           prev.includes(id)
             ? prev.filter((x) => x !== id)

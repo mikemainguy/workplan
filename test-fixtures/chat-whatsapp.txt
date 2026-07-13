@@ -1,0 +1,20 @@
+9/14/26, 1:22 PM - Morgan Reed: Good morning everyone.
+9/14/26, 1:24 PM - Morgan Reed: Do we have confirmation that the simulation dataset is final? I heard there may still be adjustments being made.
+9/14/26, 1:31 PM - Avery Chen: Not final yet. The Operations team found several classification inconsistencies and they're correcting them now.
+9/14/26, 1:35 PM - Jamie Park: Is this going to impact our milestone next week?
+9/14/26, 1:36 PM - Avery Chen: Potentially. Depends on how extensive the rework ends up being.
+9/14/26, 1:41 PM - Riley Brooks: We should probably identify which deliverables can continue independently versus which ones are blocked by the dataset.
+9/14/26, 1:43 PM - Morgan Reed: Agreed. I'd rather not stop progress on everything because of one dependency.
+9/14/26, 1:45 PM - Jordan Kim: The orchestration component can continue. The enrichment logic may need to wait.
+9/14/26, 2:01 PM - Avery Chen: That's consistent with what I've been seeing.
+9/14/26, 2:14 PM - Jamie Park: Can we get a working session this week? I still think there are open questions around how the enrichment process is supposed to behave long term.
+9/14/26, 2:15 PM - Morgan Reed: Happy to schedule something.
+9/14/26, 2:17 PM - Riley Brooks: Before we do that, let's make sure we're solving the right problem. Every time we discuss this process we discover people had different assumptions.
+9/14/26, 2:28 PM - Jordan Kim: 100% agree.
+9/15/26, 9:04 AM - Taylor Singh: Good morning.
+9/15/26, 9:05 AM - Taylor Singh: Has anyone reviewed the proposal that came through governance yesterday?
+9/15/26, 9:09 AM - Morgan Reed: Which one?
+9/15/26, 9:10 AM - Taylor Singh: The one requesting changes to the synchronization strategy.
+9/15/26, 9:12 AM - Avery Chen: I saw it. Honestly I was surprised. We hadn't previously discussed those requirements.
+9/15/26, 9:15 AM - Riley Brooks: Same here.
+9/15/26, 9:19 AM - Jordan Kim: The concern for me is that the change introduces architectural implications that haven't been evaluated.

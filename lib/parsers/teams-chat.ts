@@ -1,3 +1,5 @@
+import { parseTeamsDesktop } from "./chat-teams-desktop";
+
 export interface ChatMessage {
   sender: string;
   timestamp: string;
@@ -10,62 +12,81 @@ export interface ParsedChat {
   dateRange?: { first: string; last: string };
 }
 
-const NAME_RE = /^[A-Z][a-z]+,\s[A-Z][a-z]+$/;
-const TIME_RE = /^\d{1,2}\/\d{1,2}\s\d{1,2}:\d{2}\s[AP]M$/;
-const PREVIEW_RE = /^.+\sby\s([A-Z][a-z]+,\s[A-Z][a-z]+)$/;
+// [2026-09-14T13:22:04Z] Morgan Reed: message
+const ISO_RE =
+  /^\[(\d{4}-\d{2}-\d{2}T[^\]]+)\]\s+(.+?):\s(.+)$/;
+// 1/15/26, 9:41 AM - Morgan Reed: message
+const WA_RE =
+  /^(\d{1,2}\/\d{1,2}\/\d{2,4},?\s\d{1,2}:\d{2}(?:\s[AP]M)?)\s[–-]\s(.+?):\s(.+)$/;
+// Teams Desktop: "text by LastName, FirstName"
+const TD_RE =
+  /^.+\sby\s[A-Z][a-z]+,\s[A-Z][a-z]+$/;
 
-export function parseTeamsChat(text: string): ParsedChat {
-  const lines = text.split("\n");
-  const messages: ChatMessage[] = [];
-  let i = 0;
+type ChatFormat =
+  | "iso" | "whatsapp" | "teams-desktop" | "unknown";
 
-  while (i < lines.length) {
-    const line = lines[i]?.trim();
-    const previewMatch = line?.match(PREVIEW_RE);
+function detectFormat(lines: string[]): ChatFormat {
+  const sample = lines.slice(0, 30);
+  const isoN = sample.filter(
+    (l) => ISO_RE.test(l.trim())
+  ).length;
+  if (isoN >= 3) return "iso";
 
-    if (!previewMatch) { i++; continue; }
+  const waN = sample.filter(
+    (l) => WA_RE.test(l.trim())
+  ).length;
+  if (waN >= 3) return "whatsapp";
 
-    // After preview: name+time in either order
-    const a = lines[i + 1]?.trim() ?? "";
-    const b = lines[i + 2]?.trim() ?? "";
-    let sender = "";
-    let timestamp = "";
+  const tdN = sample.filter(
+    (l) => TD_RE.test(l.trim())
+  ).length;
+  if (tdN >= 2) return "teams-desktop";
 
-    if (NAME_RE.test(a) && TIME_RE.test(b)) {
-      sender = a; timestamp = b; i += 3;
-    } else if (TIME_RE.test(a) && NAME_RE.test(b)) {
-      timestamp = a; sender = b; i += 3;
-    } else {
-      i++; continue;
-    }
+  return "unknown";
+}
 
-    // Collect message lines until next preview
-    const msgLines: string[] = [];
-    while (i < lines.length) {
-      const next = lines[i]?.trim();
-      if (next === "has context menu") { i++; continue; }
-      if (next?.match(PREVIEW_RE)) break;
-      msgLines.push(lines[i]);
-      i++;
-    }
-
-    messages.push({
-      sender,
-      timestamp,
-      text: msgLines.join("\n").trim(),
-    });
-  }
-
+function buildResult(msgs: ChatMessage[]): ParsedChat {
   const participants = [
-    ...new Set(messages.map((m) => m.sender)),
+    ...new Set(msgs.map((m) => m.sender)),
   ];
-  const timestamps = messages.map((m) => m.timestamp);
-
+  const ts = msgs.map((m) => m.timestamp);
   return {
-    messages,
+    messages: msgs,
     participants,
-    dateRange: timestamps.length
-      ? { first: timestamps[0], last: timestamps.at(-1)! }
+    dateRange: ts.length
+      ? { first: ts[0], last: ts.at(-1)! }
       : undefined,
   };
+}
+
+function parseLineFormat(
+  text: string, re: RegExp
+): ParsedChat {
+  const msgs: ChatMessage[] = [];
+  let last: ChatMessage | null = null;
+  for (const line of text.split("\n")) {
+    const m = line.trim().match(re);
+    if (m) {
+      last = {
+        timestamp: m[1], sender: m[2], text: m[3],
+      };
+      msgs.push(last);
+    } else if (last && line.trim()) {
+      last.text += "\n" + line.trim();
+    }
+  }
+  return buildResult(msgs);
+}
+
+export function parseTeamsChat(
+  text: string
+): ParsedChat {
+  const lines = text.split("\n");
+  const format = detectFormat(lines);
+  switch (format) {
+    case "iso": return parseLineFormat(text, ISO_RE);
+    case "whatsapp": return parseLineFormat(text, WA_RE);
+    case "teams-desktop": return parseTeamsDesktop(text);
+    default: return buildResult([]);
+  }
 }
