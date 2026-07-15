@@ -14,6 +14,7 @@ const navItems = [
   { href: "/projects", label: "Projects", icon: "FolderKanban" },
   { href: "/interactions", label: "Interactions",
     icon: "MessageSquare" },
+  { href: "/topics", label: "Topics", icon: "Tag" },
   { href: "/actions", label: "Action Items",
     icon: "CheckCircle" },
   { href: "/search", label: "Search", icon: "Search" },

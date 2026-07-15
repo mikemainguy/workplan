@@ -4,15 +4,21 @@ import {
   parseOutlookInvite, normalizeAttendeeName,
 } from "./outlook-invite";
 import { parseTeamsChat } from "./teams-chat";
+import {
+  segmentByTimeGap, type ChatSegment,
+} from "./segment-chat";
+
+export type { ChatSegment };
 
 export interface ParseResult {
   contentType: ContentType;
   subject?: string;
   date?: string;
-  interactionType: string; // meeting, chat, etc.
-  attendees: string[];     // normalized names
+  interactionType: string;
+  attendees: string[];
   cleanedContent: string;
   actionItems: string[];
+  segments?: ChatSegment[];
 }
 
 const ACTION_PATTERNS = [
@@ -52,14 +58,12 @@ export function parseContent(rawText: string): ParseResult {
 
   if (contentType === "teams-chat") {
     const parsed = parseTeamsChat(rawText);
-    // Use first message timestamp as the date
-    // Format is "2/4 9:30 AM" — no year, assume current
+    const segments = segmentByTimeGap(parsed.messages);
     const firstTs = parsed.dateRange?.first;
     let chatDate: string | undefined;
     if (firstTs) {
       let d = new Date(firstTs);
       if (isNaN(d.getTime())) {
-        // Fallback: "2/4 9:30 AM" needs current year
         const year = new Date().getFullYear();
         d = new Date(`${firstTs} ${year}`);
       }
@@ -71,11 +75,16 @@ export function parseContent(rawText: string): ParseResult {
       contentType,
       date: chatDate,
       interactionType: "chat",
-      attendees: parsed.participants.map(normalizeAttendeeName),
+      attendees: parsed.participants.map(
+        normalizeAttendeeName
+      ),
       cleanedContent: parsed.messages
-        .map((m) => `${m.sender} (${m.timestamp}):\n${m.text}`)
+        .map((m) =>
+          `${m.sender} (${m.timestamp}):\n${m.text}`
+        )
         .join("\n\n"),
       actionItems: extractActionItems(rawText),
+      segments,
     };
   }
 

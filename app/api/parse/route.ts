@@ -34,7 +34,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Tier 1: Try Ollama
+  // Always run regex parse for segments
+  const regexResult = parseContent(text);
+
+  // Tier 1: Try Ollama for smarter extraction
   if (await isOllamaAvailable()) {
     const llmResult = await extractWithOllama(text);
     if (llmResult) {
@@ -43,6 +46,7 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json({
         ...llmResult,
+        segments: regexResult.segments,
         interactionType:
           llmResult.contentType === "teams-chat"
             ? "chat" : "meeting",
@@ -53,13 +57,11 @@ export async function POST(request: NextRequest) {
   }
 
   // Tier 2: Regex fallback
-  const result = parseContent(text);
   const matchedPeople = await matchPeople(
-    result.attendees
+    regexResult.attendees
   );
-
   return NextResponse.json({
-    ...result,
+    ...regexResult,
     method: "regex",
     matchedPeople,
   });

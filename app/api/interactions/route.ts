@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import {
+  fallbackTopicName,
+} from "@/lib/ai/topic-summarizer";
+
+interface SegmentInput {
+  startTime: string;
+  endTime: string;
+  startIdx: number;
+  endIdx: number;
+  participants: string[];
+}
 
 export async function GET() {
-  const interactions = await prisma.interaction.findMany({
-    orderBy: { date: "desc" },
-    include: {
-      people: { include: { person: true } },
-      project: true,
-      _count: { select: { actionItems: true } },
-    },
-  });
+  const interactions =
+    await prisma.interaction.findMany({
+      orderBy: { date: "desc" },
+      include: {
+        people: { include: { person: true } },
+        project: true,
+        _count: { select: { actionItems: true } },
+      },
+    });
   return NextResponse.json(interactions);
 }
 
@@ -26,9 +38,9 @@ export async function POST(request: NextRequest) {
       projectId: body.projectId || null,
       people: body.personIds?.length
         ? {
-            create: body.personIds.map((personId: string) => ({
-              personId,
-            })),
+            create: body.personIds.map(
+              (personId: string) => ({ personId })
+            ),
           }
         : undefined,
     },
@@ -38,12 +50,34 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Queue AI analysis if there's content to analyze
+  // Create Topics from segments
+  const segments: SegmentInput[] =
+    body.segments ?? [];
+  for (const seg of segments) {
+    const topic = await prisma.topic.create({
+      data: { name: fallbackTopicName(seg) },
+    });
+    await prisma.interactionTopic.create({
+      data: {
+        interactionId: interaction.id,
+        topicId: topic.id,
+        startTime: new Date(seg.startTime),
+        endTime: new Date(seg.endTime),
+        messageRange: JSON.stringify({
+          startIdx: seg.startIdx,
+          endIdx: seg.endIdx,
+        }),
+      },
+    });
+  }
+
   if (body.rawContent) {
     await prisma.aiJob.create({
       data: { interactionId: interaction.id },
     });
   }
 
-  return NextResponse.json(interaction, { status: 201 });
+  return NextResponse.json(
+    interaction, { status: 201 }
+  );
 }

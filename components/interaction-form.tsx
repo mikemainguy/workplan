@@ -28,6 +28,7 @@ export function InteractionForm() {
   const [project, setProject] = useState("none");
   const [type, setType] = useState("meeting");
   const [rawContent, setRawContent] = useState("");
+  const [segments, setSegments] = useState<unknown[]>([]);
   const [subject, setSubject] = useState("");
   const now = new Date().toISOString().slice(0, 16);
   const [date, setDate] = useState(now);
@@ -47,7 +48,7 @@ export function InteractionForm() {
       interactionType: string;
       cleanedContent: string;
       matchedPeople: MatchedPerson[];
-      attendees?: string[];
+      segments?: unknown[];
     },
     raw: string
   ) {
@@ -55,6 +56,7 @@ export function InteractionForm() {
     if (result.date) setDate(result.date.slice(0, 16));
     setType(result.interactionType);
     setRawContent(raw);
+    setSegments(result.segments ?? []);
 
     const matched = result.matchedPeople
       .filter((p) => p.personId)
@@ -90,7 +92,7 @@ export function InteractionForm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        type, subject, date, rawContent,
+        type, subject, date, rawContent, segments,
         projectId: project === "none" ? null : project,
         personIds: selected,
       }),

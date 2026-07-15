@@ -259,6 +259,19 @@ workplan/
 - [x] AI suggestions card on interaction detail page
 - [x] Accept/dismiss suggestions (link people, create action items)
 
+### Phase 3.8: Topic Extraction & Grouping
+- [x] Time-gap segmentation algorithm (group messages by 30min gaps / date boundaries)
+- [x] Topic + InteractionTopic models in Prisma schema
+- [x] Refactor Ollama code (extract shared client, fix file-size violations)
+- [x] AI topic naming per segment (Ollama with date-based fallback)
+- [x] Parse pipeline returns segments alongside existing fields
+- [x] Interaction save creates placeholder Topics + InteractionTopics per segment
+- [x] Background AI job updates Topic names and summaries
+- [x] Topic CRUD API routes
+- [x] Topic list and detail pages
+- [x] Segment display on interaction detail page
+- [x] Topics in nav sidebar
+
 ### Phase 4: Key Views (moved from Phase 3)
 - [ ] Daily dashboard
 - [ ] Person view (aggregated context)

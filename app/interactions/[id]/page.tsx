@@ -15,6 +15,9 @@ import {
 import { ArchiveButton } from "@/components/archive-button";
 import { DeleteButton } from "@/components/delete-button";
 import { AiSuggestions } from "@/components/ai-suggestions";
+import {
+  InteractionTopics,
+} from "@/components/interaction-topics";
 
 export default async function InteractionPage({
   params,
@@ -28,7 +31,13 @@ export default async function InteractionPage({
       people: { include: { person: true } },
       project: true,
       actionItems: {
-        include: { people: { include: { person: true } } },
+        include: {
+          people: { include: { person: true } },
+        },
+      },
+      topics: {
+        orderBy: { startTime: "asc" },
+        include: { topic: true },
       },
     },
   });
@@ -98,6 +107,10 @@ export default async function InteractionPage({
           </CardContent>
         </Card>
       )}
+
+      <InteractionTopics
+        topics={interaction.topics}
+      />
 
       <AiSuggestions
         interactionId={interaction.id}

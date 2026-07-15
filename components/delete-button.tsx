@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 
 interface Props {
-  entityType: "people" | "projects" | "interactions";
+  entityType: "people" | "projects" | "interactions" | "topics";
   entityId: string;
   entityName: string;
   redirectTo: string;

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  entityType: "people" | "projects" | "interactions";
+  entityType: "people" | "projects" | "interactions" | "topics";
   entityId: string;
   isArchived: boolean;
 }

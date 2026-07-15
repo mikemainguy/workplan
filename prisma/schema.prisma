@@ -55,6 +55,7 @@ model Interaction {
   people      InteractionPerson[]
   actionItems ActionItem[]
   aiJobs      AiJob[]
+  topics      InteractionTopic[]
 }
 
 model ActionItem {
@@ -106,4 +107,32 @@ model ActionItemPerson {
   person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
   @@id([actionItemId, personId])
+}
+
+model Topic {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  metadata    String?
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  interactions InteractionTopic[]
+}
+
+model InteractionTopic {
+  id           String   @id @default(cuid())
+  startTime    DateTime
+  endTime      DateTime
+  summary      String?
+  messageRange String?  // JSON: {startIdx, endIdx}
+
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+
+  topicId String
+  topic   Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([interactionId, topicId])
 }
