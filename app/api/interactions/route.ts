@@ -55,7 +55,10 @@ export async function POST(request: NextRequest) {
     body.segments ?? [];
   for (const seg of segments) {
     const topic = await prisma.topic.create({
-      data: { name: fallbackTopicName(seg) },
+      data: {
+        name: fallbackTopicName(seg),
+        source: "ai",
+      },
     });
     await prisma.interactionTopic.create({
       data: {

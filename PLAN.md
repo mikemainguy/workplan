@@ -272,6 +272,14 @@ workplan/
 - [x] Segment display on interaction detail page
 - [x] Topics in nav sidebar
 
+### Phase 3.9: AI Review Workflow (Suggestion Model)
+- [x] Suggestion model in Prisma schema (type, payload, status, linkedEntityId)
+- [x] Add `source` field to Person, ActionItem, Topic for provenance
+- [x] AI processing creates individual Suggestion records per attendee/action-item/topic-name
+- [x] Suggestion API routes (list, accept, reject)
+- [x] Rewrite ai-suggestions.tsx (split 193-line component, use Suggestion API)
+- [ ] Unified review page for pending suggestions
+
 ### Phase 4: Key Views (moved from Phase 3)
 - [ ] Daily dashboard
 - [ ] Person view (aggregated context)

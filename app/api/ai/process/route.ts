@@ -5,37 +5,28 @@ import { parseTeamsChat } from "@/lib/parsers/teams-chat";
 import { segmentByTimeGap } from "@/lib/parsers/segment-chat";
 import { summarizeSegments } from "@/lib/ai/topic-summarizer";
 import { detectContentType } from "@/lib/parsers/detect";
+import {
+  createAnalysisSuggestions,
+  createTopicSuggestions,
+} from "@/lib/ai/create-suggestions";
 
-async function updateTopicNames(
-  interactionId: string, text: string
+async function createTopicNameSuggestions(
+  aiJobId: string, interactionId: string, text: string
 ) {
-  const contentType = detectContentType(text);
-  if (contentType !== "teams-chat") return;
+  if (detectContentType(text) !== "teams-chat") return;
   const parsed = parseTeamsChat(text);
   const segments = segmentByTimeGap(parsed.messages);
-  if (segments.length === 0) return;
+  if (!segments.length) return;
 
   const summaries = await summarizeSegments(segments);
-  const links = await prisma.interactionTopic.findMany(
-    {
-      where: { interactionId },
-      orderBy: { startTime: "asc" },
-      include: { topic: true },
-    }
+  const links = await prisma.interactionTopic.findMany({
+    where: { interactionId },
+    orderBy: { startTime: "asc" },
+  });
+  const topicIds = links.map((l) => l.topicId);
+  await createTopicSuggestions(
+    aiJobId, interactionId, summaries, topicIds
   );
-
-  for (let i = 0; i < links.length; i++) {
-    const s = summaries[i];
-    if (!s) continue;
-    await prisma.topic.update({
-      where: { id: links[i].topicId },
-      data: { name: s.topic },
-    });
-    await prisma.interactionTopic.update({
-      where: { id: links[i].id },
-      data: { summary: s.summary },
-    });
-  }
 }
 
 export async function POST() {
@@ -57,11 +48,14 @@ export async function POST() {
 
   const text = job.interaction.rawContent ?? "";
   if (!text) {
-    const empty = { summary: "", attendees: [], actionItems: [] };
+    const empty = {
+      summary: "", attendees: [], actionItems: [],
+    };
     await prisma.aiJob.update({
       where: { id: job.id },
       data: {
-        status: "completed", completedAt: new Date(),
+        status: "completed",
+        completedAt: new Date(),
         result: JSON.stringify(empty),
       },
     });
@@ -82,8 +76,11 @@ export async function POST() {
         result: JSON.stringify(analysis),
       },
     });
-    await updateTopicNames(
-      job.interaction.id, text
+    await createAnalysisSuggestions(
+      job.id, job.interaction.id, analysis
+    );
+    await createTopicNameSuggestions(
+      job.id, job.interaction.id, text
     );
     console.log(`[AI] Completed: ${job.id}`);
     return NextResponse.json({
